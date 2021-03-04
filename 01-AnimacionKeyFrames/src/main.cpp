@@ -1010,6 +1010,146 @@ void applicationLoop() {
 		// Constantes de animaciones
 		rotHelHelY += 0.5;
 
+		/*******************************************
+						KEYFRAMES
+		 *******************************************/
+
+		if (record && modelSelected == 1) {
+			matrixDartJoints.push_back(rotDartHead);
+
+			matrixDartJoints.push_back(rotDartLeftArm);
+			matrixDartJoints.push_back(rotDartLeftHand);
+
+			matrixDartJoints.push_back(rotDartRightArm);
+			matrixDartJoints.push_back(rotDartRightHand);
+
+			matrixDartJoints.push_back(rotDartLeftLeg);
+			matrixDartJoints.push_back(rotDartRightLeg);
+
+			if (saveFrame) {
+				appendFrame(myfile, matrixDartJoints);
+				saveFrame = false;
+			}
+		}
+
+
+		else if (keyFramesDartJoints.size() > 0) {
+			// Frame reproduction
+			interpolationDartJoints = numPasosDartJoints / (float)maxNumPasosDartJoints;
+			numPasosDartJoints++;
+
+			if (interpolationDartJoints > 1.0) { // reiniciamos los 2 primeros valores
+				numPasosDartJoints = 0;
+				interpolationDartJoints = 0;
+				indexFrameDartJoints = indexFrameDartJointsNext;
+				indexFrameDartJointsNext++;
+			}
+
+			if (indexFrameDartJointsNext > keyFramesDartJoints.size() - 1) {
+				indexFrameDartJointsNext = 0;
+			}
+
+			rotDartHead = interpolate(keyFramesDartJoints, indexFrameDartJoints, indexFrameDartJointsNext, 0, interpolationDartJoints);
+			rotDartLeftArm = interpolate(keyFramesDartJoints, indexFrameDartJoints, indexFrameDartJointsNext, 1, interpolationDartJoints);
+			rotDartLeftHand = interpolate(keyFramesDartJoints, indexFrameDartJoints, indexFrameDartJointsNext, 2, interpolationDartJoints);
+			rotDartRightArm = interpolate(keyFramesDartJoints, indexFrameDartJoints, indexFrameDartJointsNext, 3, interpolationDartJoints);
+			rotDartRightHand = interpolate(keyFramesDartJoints, indexFrameDartJoints, indexFrameDartJointsNext, 4, interpolationDartJoints);
+			rotDartLeftLeg = interpolate(keyFramesDartJoints, indexFrameDartJoints, indexFrameDartJointsNext, 5, interpolationDartJoints);
+			rotDartRightLeg = interpolate(keyFramesDartJoints, indexFrameDartJoints, indexFrameDartJointsNext, 6, interpolationDartJoints);
+		}
+
+
+		// Para las transformaciones del dart 
+		if (record && modelSelected == 2) {
+			matrixDart.push_back(modelMatrixDart);
+			if (saveFrame) {
+				appendFrame(myfile, matrixDart);
+				saveFrame = false;
+			}
+		}
+		else if (keyFramesDart.size() > 0) {
+			interpolationDart = numPasosDart / (float)maxNumPasosDart;
+			numPasosDart++;
+			if (interpolationDart > 1.0) {
+				numPasosDart = 0;
+				interpolationDart = 0;
+				indexFrameDart = indexFrameDartNext;
+				indexFrameDartNext++;
+			}
+			if (indexFrameDartNext > keyFramesDart.size() - 1) {
+				indexFrameDartNext = 0;
+			}
+			modelMatrixDart = interpolate(keyFramesDart, indexFrameDart, indexFrameDartNext, 0, interpolationDart);
+		}
+
+
+		/*******************************************
+		  MAQUINA DE ESTADOS PARA EL ECLIPSE  CAR
+		 *******************************************/
+
+		switch(state) {
+		case 0:
+			if (numberAdvance == 0) {
+				maxAdvance = 65.0;
+			}
+			else if(numberAdvance == 1){
+				maxAdvance = 49.0;
+			}
+			else if (numberAdvance == 2) {
+				maxAdvance = 44.5;
+			}
+			else if (numberAdvance == 3) {
+				maxAdvance = 49.0;
+			}
+			else if (numberAdvance == 4) {
+				maxAdvance = 44.5;
+			}
+			state = 1;
+			break;
+
+		case 1:
+			modelMatrixEclipse = glm::translate(modelMatrixEclipse, glm::vec3(0.0, 0.0, 0.1));
+			advanceCount += 0.1;
+
+			rotWheelsX += 0.05;
+			rotWheelsY -= 0.02; // una vez salimos del caso 2 regresamos la llanta 
+			if (rotWheelsY < 0) {
+				rotWheelsY = 0;
+			}
+
+			if (advanceCount > maxAdvance) {
+				advanceCount = 0;
+				numberAdvance++;
+				state = 2;
+			}
+			break;
+
+		case 2:
+			modelMatrixEclipse = glm::translate(modelMatrixEclipse, glm::vec3(0.0, 0.0, 0.025));
+			modelMatrixEclipse = glm::rotate(modelMatrixEclipse, glm::radians(0.5f), glm::vec3(0,1,0));
+			rotCount += 0.5;
+
+			rotWheelsX += 0.05;
+			rotWheelsY += 0.02;
+			if (rotWheelsY > 0.25) {
+				rotWheelsY = 0.25;
+			}
+
+			if (rotCount >= 90) {
+				rotCount = 0;
+				state = 0;
+				if (numberAdvance > 4) {
+					numberAdvance = 1;
+				}
+			}
+
+
+			break;
+
+		
+		}
+
+
 		glfwSwapBuffers(window);
 	}
 }
