@@ -10,24 +10,6 @@
 
 </p>
 
-<details open="open">
-  <summary>Table of Contents</summary>
-  <ol>
-    <li href="#About-The-Project">About The Project</li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#acknowledgements">Acknowledgements</a></li>
-  </ol>
-</details>
-
-
 ## About The Project
 Hey there! I'm happy to share all my practices, notes and projects of CGA. I nned to say that the main code is from Martell professor.
 
