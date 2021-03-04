@@ -13,7 +13,7 @@
 <details open="open">
   <summary>Table of Contents</summary>
   <ol>
-    <li href="#about-the-project">About The Project</li>
+    <li href="#About-The-Project">About The Project</li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
