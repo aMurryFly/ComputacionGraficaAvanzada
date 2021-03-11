@@ -1,0 +1,18 @@
+newmtl HelicopteroChasis:phong1SG_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd diffuse_m24_alpha.tga
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 94.12
+newmtl Mi_24_heli1:phong1SG_001
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd diffuse_m24_alpha.tga
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 94.12
