@@ -1316,7 +1316,7 @@ void applicationLoop() {
 		//Se cierra  puerta
 		case 4:
 			if (indexFrameDart == 5) {
-				dorRotCount -= 0.9; 
+				dorRotCount -= 0.1; 
 
 				if (dorRotCount < 0) {
 					dorRotCount = 0.0; 
