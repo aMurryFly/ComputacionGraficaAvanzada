@@ -3,7 +3,7 @@
 
   <p align="center">
   
-    Estudiante: Alfonso Murrieta Villegas
+    Estudiante: Alfonso Murrieta Villegas 
 
     Professor: R. Martell 
   </p>
