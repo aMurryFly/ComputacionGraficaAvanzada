@@ -77,13 +77,21 @@ Model modelDartLegoLeftHand;
 Model modelDartLegoRightHand;
 Model modelDartLegoLeftLeg;
 Model modelDartLegoRightLeg;
-Model cawboyModelAnimate;
 // Model animate instance
 // Mayow
 Model mayowModelAnimate;
+//modelo Cowboy
+Model cawboyModelAnimate;
+
+//Modelos de venom
+//reposo
+
+Model venomAnimateR;
+//corriendo
+Model venomAnimateC;
 
 // Terrain model instance
-Terrain terrain(-1, -1, 200, 8, "../Textures/MapAlturas1.png");//heightmap.png");
+Terrain terrain(-1, -1,200, 15, "../Textures/MapAlturas4.png");
 
 GLuint textureCespedID, textureWallID, textureWindowID, textureHighwayID, textureLandingPadID;
 GLuint skyboxTextureID;
@@ -114,11 +122,12 @@ glm::mat4 modelMatrixLambo = glm::mat4(1.0);
 glm::mat4 modelMatrixAircraft = glm::mat4(1.0);
 glm::mat4 modelMatrixDart = glm::mat4(1.0f);
 glm::mat4 modelMatrixMayow = glm::mat4(1.0f);
-glm::mat4 modelMatrixCowboy = glm::mat4(1.0f);
-
+glm::mat4 modelMatrixCawboy = glm::mat4(1.0f);
+glm::mat4 modelMatrixVenom = glm::mat4(1.0f);
 
 float rotDartHead = 0.0, rotDartLeftArm = 0.0, rotDartLeftHand = 0.0, rotDartRightArm = 0.0, rotDartRightHand = 0.0, rotDartLeftLeg = 0.0, rotDartRightLeg = 0.0;
 int modelSelected = 0;
+int animselect = 0;
 bool enableCountSelected = true;
 
 // Variables to animations keyframes
@@ -278,11 +287,20 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	mayowModelAnimate.loadModel("../models/mayow/personaje2.fbx");
 	mayowModelAnimate.setShader(&shaderMulLighting);
 
-	//Cowboy
+	//cawboy
 	cawboyModelAnimate.loadModel("../models/cowboy/Character Running.fbx");
 	cawboyModelAnimate.setShader(&shaderMulLighting);
 
+	//venom
+	venomAnimateR.loadModel("../models/venom/source/venomS.fbx");
+	venomAnimateR.setShader(&shaderMulLighting);
+	
+	venomAnimateC.loadModel("../models/venom/source/venomC.fbx");
+	venomAnimateC.setShader(&shaderMulLighting);
+	
 	camera->setPosition(glm::vec3(0.0, 3.0, 4.0));
+
+
 
 	// Definimos el tamanio de la imagen
 	int imageWidth, imageHeight;
@@ -592,7 +610,7 @@ bool processInput(bool continueApplication) {
 	if (enableCountSelected && glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS){
 		enableCountSelected = false;
 		modelSelected++;
-		if(modelSelected > 3)
+		if(modelSelected > 5)
 			modelSelected = 0;
 		if(modelSelected == 1)
 			fileName = "../animaciones/animation_dart_joints.txt";
@@ -669,7 +687,7 @@ bool processInput(bool continueApplication) {
 	else if (modelSelected == 1 && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS &&
 			glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
 		rotDartRightLeg -= 0.02;
-	if (modelSelected ==2 && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	if (modelSelected == 2 && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 		modelMatrixDart = glm::rotate(modelMatrixDart, 0.02f, glm::vec3(0, 1, 0));
 	else if (modelSelected == 2 && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 		modelMatrixDart = glm::rotate(modelMatrixDart, -0.02f, glm::vec3(0, 1, 0));
@@ -677,16 +695,41 @@ bool processInput(bool continueApplication) {
 		modelMatrixDart = glm::translate(modelMatrixDart, glm::vec3(-0.02, 0.0, 0.0));
 	else if (modelSelected == 2 && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		modelMatrixDart = glm::translate(modelMatrixDart, glm::vec3(0.02, 0.0, 0.0));
-	
-	// COWBOY
+
+	///
 	if (modelSelected == 3 && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-		modelMatrixCowboy = glm::rotate(modelMatrixCowboy, 0.02f, glm::vec3(0, 1, 0));
+		modelMatrixCawboy = glm::rotate(modelMatrixCawboy, 0.02f, glm::vec3(0, 1, 0));
 	else if (modelSelected == 3 && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		modelMatrixCowboy = glm::rotate(modelMatrixCowboy, -0.02f, glm::vec3(0, 1, 0));
+		modelMatrixCawboy = glm::rotate(modelMatrixCawboy, -0.02f, glm::vec3(0, 1, 0));
 	if (modelSelected == 3 && glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-		modelMatrixCowboy = glm::translate(modelMatrixCowboy, glm::vec3(0.0, 0.0, 0.02));
+		modelMatrixCawboy = glm::translate(modelMatrixCawboy, glm::vec3(0.0, 0.0, 0.02));
 	else if (modelSelected == 3 && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-		modelMatrixCowboy = glm::translate(modelMatrixCowboy, glm::vec3(0.0, 0.0, -0.02));
+		modelMatrixCawboy = glm::translate(modelMatrixCawboy, glm::vec3(0.0, 0.0, -0.02));
+
+	if (modelSelected == 5 && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+		modelMatrixVenom = glm::rotate(modelMatrixVenom, 0.02f, glm::vec3(0, 1, 0));
+	else if (modelSelected == 5 && glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+		modelMatrixVenom = glm::rotate(modelMatrixVenom, -0.02f, glm::vec3(0, 1, 0));
+
+	if (modelSelected == 5 && glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+		modelMatrixVenom = glm::translate(modelMatrixVenom, glm::vec3(0.0, 0.0, 0.02));
+		if (animselect == 0)
+			animselect = 1;
+	}
+	else if (modelSelected == 5 && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		modelMatrixVenom = glm::translate(modelMatrixVenom, glm::vec3(0.0, 0.0, -0.02));
+		if (animselect == 0)
+			animselect = 1;
+	}
+
+	else if (modelSelected == 5 && glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE) {
+		if (animselect == 1)
+			animselect = 0;
+	}
+	else if (modelSelected == 5 && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
+		if (animselect == 1)
+			animselect = 0;
+	}
 
 	glfwPollEvents();
 	return continueApplication;
@@ -704,8 +747,6 @@ void applicationLoop() {
 	modelMatrixLambo = glm::translate(modelMatrixLambo, glm::vec3(23.0, 0.0, 0.0));
 
 	modelMatrixDart = glm::translate(modelMatrixDart, glm::vec3(3.0, 0.0, 20.0));
-
-	modelMatrixCowboy = glm::translate(modelMatrixCowboy, glm::vec3(0.0, 0.0, 20.0));
 
 	modelMatrixMayow = glm::translate(modelMatrixMayow, glm::vec3(13.0f, 0.05f, -5.0f));
 	modelMatrixMayow = glm::rotate(modelMatrixMayow, glm::radians(-90.0f), glm::vec3(0, 1, 0));
@@ -781,7 +822,7 @@ void applicationLoop() {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textureCespedID);
 		shaderMulLighting.setVectorFloat2("scaleUV", glm::value_ptr(glm::vec2(80, 80)));
-		terrain.setPosition(glm::vec3(100, 0, 100));
+		terrain.setPosition(glm::vec3(100, 0, 100)); //modificar a la mitad del tercer parametro 
 		//terrain.enableWireMode();
 		terrain.render();
 		shaderMulLighting.setVectorFloat2("scaleUV", glm::value_ptr(glm::vec2(0, 0)));
@@ -886,21 +927,53 @@ void applicationLoop() {
 		 * Custom Anim objects obj
 		 *******************************************/
 		modelMatrixMayow[3][1] = terrain.getHeightTerrain(modelMatrixMayow[3][0], modelMatrixMayow[3][2]);
+
 		glm::mat4 modelMatrixMayowBody = glm::mat4(modelMatrixMayow);
 		modelMatrixMayowBody = glm::scale(modelMatrixMayowBody, glm::vec3(0.021, 0.021, 0.021));
+		
 		mayowModelAnimate.setAnimationIndex(0);
 		mayowModelAnimate.render(modelMatrixMayowBody);
 
+		glm::mat4 modelMatrixCawboyBody = glm::mat4(modelMatrixCawboy);
+		
+		modelMatrixCawboyBody[3][1] = terrain.getHeightTerrain(modelMatrixCawboyBody[3][0], modelMatrixCawboyBody[3][2]);
+		//modelMatrixCawboyBody[2][1] = terrain.getNormalTerrain(modelMatrixCawboy[3][0], modelMatrixCawboy[3][2]);
 
-		glm::mat4 modelMatrixCowboyBody = glm::mat4(modelMatrixCowboy);
-		//modelMatrixCowboyBody = glm::translate(modelMatrixCowboyBody, glm::vec3(0.0, 0.0, 20.0));
-		modelMatrixCowboyBody[3][1] = terrain.getHeightTerrain(modelMatrixCowboyBody[3][0], modelMatrixCowboyBody[3][2]);
-		modelMatrixCowboyBody = glm::scale(modelMatrixCowboyBody, glm::vec3(0.004, 0.004, 0.004));
-		cawboyModelAnimate.render(modelMatrixCowboyBody);
+		modelMatrixCawboyBody[1][0] = terrain.getNormalTerrain(modelMatrixCawboy[3][0], modelMatrixCawboy[3][2]).x;
+	    modelMatrixCawboyBody[1][1] = terrain.getNormalTerrain(modelMatrixCawboy[3][0], modelMatrixCawboy[3][2]).y;
+		modelMatrixCawboyBody[1][2] = terrain.getNormalTerrain(modelMatrixCawboy[3][0], modelMatrixCawboy[3][2]).z;
+		//
+		
+		
 
 
+		/*glm::vec3 normal = terrain.getNormalTerrain(modelMatrixCawboy[3][0], modelMatrixCawboy[3][2]);
+		glm::vec3 tangente = glm::normalize(glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), normal));
+		float angulo = std::atan2(tangente.x, tangente.z);
+		modelMatrixCawboyBody = glm::rotate(modelMatrixCawboyBody, glm::radians(angulo), glm::vec3(1.0f, 0.0f, 1.0f));
+		*/
+
+		modelMatrixCawboyBody = glm::scale(modelMatrixCawboyBody, glm::vec3(0.004,0.004,0.004));
+		cawboyModelAnimate.render(modelMatrixCawboyBody);
 
 
+		//Venom
+
+
+		glm::mat4 modelMatrixVenomBody = glm::mat4(modelMatrixVenom);
+
+		modelMatrixVenomBody[3][1] = terrain.getHeightTerrain(modelMatrixVenomBody[3][0], modelMatrixVenomBody[3][2]);
+
+		modelMatrixVenomBody[1][0] = terrain.getNormalTerrain(modelMatrixVenomBody[3][0], modelMatrixVenomBody[3][2]).x;
+		modelMatrixVenomBody[1][1] = terrain.getNormalTerrain(modelMatrixVenomBody[3][0], modelMatrixVenomBody[3][2]).y;
+		modelMatrixVenomBody[1][2] = terrain.getNormalTerrain(modelMatrixVenomBody[3][0], modelMatrixVenomBody[3][2]).z;
+
+		modelMatrixVenomBody = glm::scale(modelMatrixVenomBody, glm::vec3(.01, .01, .01));
+		if (animselect == 0)
+			venomAnimateR.render(modelMatrixVenomBody);
+		else if (animselect == 1)
+			venomAnimateC.render(modelMatrixVenomBody);
+	
 
 		/*******************************************
 		 * Skybox
